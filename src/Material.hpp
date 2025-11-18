@@ -7,9 +7,9 @@ class Material
 {
 public:
 	Material();
-	Material(const char* name, const char* diffPath, const char* roughPath);
+	Material(const char* name, const char* diffPath, const char* roughPath, const char* normPath);
 
-	void init(const char* name, const char* diffPath, const char* roughPath);
+	void init(const char* name, const char* diffPath, const char* roughPath, const char* normPath);
 
 	std::string name;
 
@@ -18,4 +18,5 @@ public:
 private:
 	Texture diff;
 	Texture rough;
+	Texture norm;
 };

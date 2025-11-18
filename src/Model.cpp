@@ -60,9 +60,11 @@ Model::Model(const char* path)
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 		aiString diffuseFile;
 		aiString roughnessFile;
+		aiString normalsFile;
 
 		material->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseFile);
 		material->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &roughnessFile);
+		material->GetTexture(aiTextureType_NORMALS, 0, &normalsFile);
 
 		std::filesystem::path diffusePath = modelPath.parent_path() / diffuseFile.C_Str();
 		std::string diffuseString = diffusePath.string();
@@ -70,7 +72,10 @@ Model::Model(const char* path)
 		std::filesystem::path roughnessPath = modelPath.parent_path() / roughnessFile.C_Str();
 		std::string roughnessString = roughnessPath.string();
 
-		Material mat(material->GetName().C_Str(), diffuseString.c_str(), roughnessString.c_str());
+		std::filesystem::path normalsPath = modelPath.parent_path() / normalsFile.C_Str();
+		std::string normalsString = normalsPath.string();
+
+		Material mat(material->GetName().C_Str(), diffuseString.c_str(), roughnessString.c_str(), normalsString.c_str());
 
 		for (int j = 0; j < mesh->mNumFaces; j++)
 		{

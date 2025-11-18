@@ -19,15 +19,20 @@ struct Light
 
 uniform sampler2D uMaterialDiffuse;
 uniform sampler2D uMaterialRoughness;
+uniform sampler2D uMaterialNormals;
 uniform vec3 uCameraPosition;
 uniform Light light;
+uniform int doIt;
 
 vec3 calcDirectionalLight()
 {
 	vec4 albedo = texture(uMaterialDiffuse, vTexCoords);
 	vec4 roughness = texture(uMaterialRoughness, vTexCoords);
-	if (albedo.a == 0)
+	vec3 normals = vec3(texture(uMaterialNormals, vTexCoords).rgb * 2 - 1);
+
+	if (albedo.a < 0.25f)
 		discard;
+
 	vec3 ambient = light.ambient * albedo;
 
 	vec3 normal = normalize(vNormal);
@@ -37,16 +42,19 @@ vec3 calcDirectionalLight()
 	vec3 viewDir = normalize(uCameraPosition - vPos);
 	vec3 reflectDir = reflect(light.direction, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0), light.shininess);
-	vec3 specular = spec * light.specular;
+	vec3 specular = spec * light.specular * roughness.g;
 
 	return ambient + diffuse + specular;
 }
 
 void main()
 {
-	vec4 color = vec4(calcDirectionalLight(), 1.0f);
-	// vec4 color = texture(uMaterialDiffuse, vTexCoords);
-	if (color.a == 0)
+	vec4 color;
+	if (doIt == 1.0f)
+		color = vec4(calcDirectionalLight(), 1.0f);
+	else
+		color = texture(uMaterialDiffuse, vTexCoords);
+	if (color.a < 0.25f)
 		discard;
 	FragColor = color;
 }

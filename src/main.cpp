@@ -67,6 +67,8 @@ int main()
 	shader.setMat4("uView", &camera.getViewMatrix()[0][0]);
 	shader.setMat4("uModel", &model[0][0]);
 	shader.setInt("uMaterialDiffuse", 0);
+	shader.setInt("uMaterialRoughness", 1);
+	shader.setInt("uMaterialNormals", 2);
 
 	float lastTime = glfwGetTime();
 	float deltaTime;
@@ -85,7 +87,6 @@ int main()
 	shader.setVec3("light.specular", &sun.specular[0]);
 	shader.setFloat("light.shininess", sun.shininess);
 
-	shader.setInt("uMaterialRoughness", 1);
 
 	float speed = 0.01f;
 
@@ -112,6 +113,7 @@ int main()
         ImGui::NewFrame();
 
 		ImGuiID dockspace_id = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+		shader.setInt("doIt", simulate);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -148,6 +150,7 @@ int main()
 			shader.setVec3("light.direction", &sun.direction[0]);
 		}
 		ImGui::DragFloat("speed", &speed);
+		ImGui::Text("DoIT: %i", simulate);
 		ImGui::End();
 
 		ImGui::Render();
