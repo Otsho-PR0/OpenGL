@@ -122,7 +122,7 @@ int main()
 		shader.setMat4("uModel", &model[0][0]);
 		instance.draw();
 
-		ImGui::Begin("Inspector", NULL,
+		ImGui::Begin("Toolbar", NULL,
              ImGuiWindowFlags_NoResize |
              ImGuiWindowFlags_NoMove   |
 			 ImGuiWindowFlags_NoScrollbar |
@@ -139,8 +139,7 @@ int main()
 			simulate = !simulate;
 		ImGui::SameLine(0,2);
 		if (ImGui::Button("\uead7", ImVec2(26,26)))
-		{
-		}
+			simulate = false;
 		ImGui::End();
 
 		ImGui::Begin("Properties");
