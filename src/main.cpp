@@ -11,6 +11,7 @@
 #include "Shader.hpp"
 #include "Light.hpp"
 #include "Model.hpp"
+#include "Skybox.hpp"
 
 Camera camera({0,1,0});
 
@@ -62,6 +63,19 @@ int main()
 	Shader shader("../../res/shaders/shader.vert", "../../res/shaders/shader.frag");
 	Model instance("../""../res/models/scene.gltf");
 
+	
+	std::vector<std::string> faces
+	{
+		{"../""../res/textures/right.jpg"},
+		{"../""../res/textures/left.jpg"},
+		{"../""../res/textures/top.jpg"},
+		{"../""../res/textures/bottom.jpg"},
+		{"../""../res/textures/front.jpg"},
+		{"../""../res/textures/back.jpg"},
+	};
+
+	Skybox skybox(faces, projection);
+
 	shader.use();
 	shader.setMat4("uProjection", &projection[0][0]);
 	shader.setMat4("uView", &camera.getViewMatrix()[0][0]);
@@ -86,7 +100,6 @@ int main()
 	shader.setVec3("light.diffuse", &sun.diffuse[0]);
 	shader.setVec3("light.specular", &sun.specular[0]);
 	shader.setFloat("light.shininess", sun.shininess);
-
 
 	float speed = 0.01f;
 
@@ -113,10 +126,13 @@ int main()
         ImGui::NewFrame();
 
 		ImGuiID dockspace_id = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
-		shader.setInt("doIt", simulate);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		skybox.draw(glm::mat4(glm::mat3(camera.getViewMatrix())));
+
+		shader.use();
+		shader.setInt("doIt", simulate);
 		shader.setMat4("uView", &camera.getViewMatrix()[0][0]);
 		shader.setVec3("uCameraPosition", &camera.position[0]);
 		shader.setMat4("uModel", &model[0][0]);

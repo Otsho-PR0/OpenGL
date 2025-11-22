@@ -50,10 +50,7 @@ vec3 calcDirectionalLight()
 void main()
 {
 	vec4 color;
-	if (doIt == 1.0f)
-		color = vec4(calcDirectionalLight(), 1.0f);
-	else
-		color = texture(uMaterialDiffuse, vTexCoords);
+	color = vec4(calcDirectionalLight(), 1.0f);
 	if (color.a < 0.25f)
 		discard;
 	FragColor = color;
